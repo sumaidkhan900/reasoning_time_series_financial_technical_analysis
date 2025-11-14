@@ -1,0 +1,171 @@
+﻿# ==============================================================================
+# Requirements File for Verbal Technical Analysis (VTA) Framework
+# ==============================================================================
+# Author: CS Chirinda
+# Version: 1.0.0
+# Python: >=3.9,<3.13
+# License: MIT
+#
+# Installation Instructions:
+# 1. Create a virtual environment: python -m venv vta_env
+# 2. Activate: source vta_env/bin/activate (Linux/Mac) or vta_env\Scripts\activate (Windows)
+# 3. Install: pip install -r requirements.txt
+# 4. For GPU support: Ensure CUDA toolkit is installed before installing PyTorch
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Core Scientific Computing Stack
+# ------------------------------------------------------------------------------
+
+# Numerical computing foundation
+numpy>=1.24.0,<2.0.0
+
+# Time-series data manipulation and financial data handling
+pandas>=2.0.0,<3.0.0
+
+# Just-In-Time compilation for performance-critical technical indicator calculations
+numba>=0.57.0,<0.61.0
+
+# ------------------------------------------------------------------------------
+# Deep Learning Framework
+# ------------------------------------------------------------------------------
+
+# PyTorch: Core deep learning framework for transformer architecture
+# Note: For GPU support, install from https://pytorch.org/ with CUDA version
+# CPU-only version specified below; replace with CUDA version for production
+torch>=2.1.0,<2.5.0
+torchvision>=0.16.0,<0.20.0
+
+# ------------------------------------------------------------------------------
+# Natural Language Processing & Large Language Models
+# ------------------------------------------------------------------------------
+
+# Hugging Face Transformers: Pre-trained LLMs (Qwen2.5, GPT-2) and tokenizers
+transformers>=4.36.0,<4.46.0
+
+# Hugging Face Accelerate: Distributed training and mixed-precision support
+accelerate>=0.25.0,<0.35.0
+
+# Hugging Face Datasets: Optional, for data loading utilities
+datasets>=2.16.0,<3.0.0
+
+# SentencePiece: Tokenizer backend for some LLM architectures
+sentencepiece>=0.1.99,<0.3.0
+
+# Tokenizers: Fast tokenization backend
+tokenizers>=0.15.0,<0.21.0
+
+# ------------------------------------------------------------------------------
+# Parameter-Efficient Fine-Tuning (PEFT)
+# ------------------------------------------------------------------------------
+
+# PEFT: Low-Rank Adaptation (LoRA) for efficient LLM fine-tuning
+peft>=0.7.0,<0.14.0
+
+# ------------------------------------------------------------------------------
+# Machine Learning Utilities
+# ------------------------------------------------------------------------------
+
+# scikit-learn: PCA, normalization, preprocessing pipelines
+scikit-learn>=1.3.0,<1.6.0
+
+# ------------------------------------------------------------------------------
+# Optimization & Financial Computing
+# ------------------------------------------------------------------------------
+
+# CVXPY: Convex optimization for Markowitz portfolio optimization
+cvxpy>=1.4.0,<1.6.0
+
+# ECOS: Default solver for CVXPY (automatically installed with cvxpy)
+ecos>=2.0.12,<2.1.0
+
+# SCS: Alternative robust solver for large-scale problems
+scs>=3.2.3,<3.3.0
+
+# ------------------------------------------------------------------------------
+# Progress Monitoring
+# ------------------------------------------------------------------------------
+
+# tqdm: Progress bars for training loops and data processing
+tqdm>=4.66.0,<4.67.0
+
+# ------------------------------------------------------------------------------
+# Financial Data & Market Calendars (Optional Dependencies)
+# ------------------------------------------------------------------------------
+
+# exchange_calendars: Market holiday handling and trading day validation
+# Note: Wrapped in try-except in code; install if needed for production
+exchange-calendars>=4.2.0,<4.6.0
+
+# yfinance: Yahoo Finance API for historical price data acquisition
+yfinance>=0.2.32,<0.3.0
+
+# ------------------------------------------------------------------------------
+# Development & Code Quality Tools (Optional)
+# ------------------------------------------------------------------------------
+
+# pytest: Unit testing framework
+pytest>=7.4.0,<8.4.0
+
+# black: Code formatting
+black>=23.12.0,<24.11.0
+
+# flake8: Linting
+flake8>=6.1.0,<7.2.0
+
+# mypy: Static type checking
+mypy>=1.7.0,<1.14.0
+
+# isort: Import sorting
+isort>=5.13.0,<5.14.0
+
+# ------------------------------------------------------------------------------
+# Logging & Monitoring (Optional)
+# ------------------------------------------------------------------------------
+
+# tensorboard: Training metrics visualization
+tensorboard>=2.15.0,<2.18.0
+
+# wandb: Weights & Biases experiment tracking (optional)
+# wandb>=0.16.0,<0.19.0
+
+# ------------------------------------------------------------------------------
+# Additional Utility Libraries
+# ------------------------------------------------------------------------------
+
+# python-dateutil: Date parsing utilities (installed with pandas)
+python-dateutil>=2.8.2,<2.10.0
+
+# pytz: Timezone handling for financial data
+pytz>=2023.3,<2025.0
+
+# requests: HTTP library for API calls
+requests>=2.31.0,<2.33.0
+
+# matplotlib: Plotting for visualization and analysis
+matplotlib>=3.8.0,<3.10.0
+
+# seaborn: Statistical data visualization
+seaborn>=0.13.0,<0.14.0
+
+# ==============================================================================
+# Platform-Specific Notes
+# ==============================================================================
+#
+# GPU Support (NVIDIA CUDA):
+# - Replace the torch line above with the appropriate CUDA version from:
+#   https://pytorch.org/get-started/locally/
+# - Example for CUDA 11.8:
+#   torch>=2.1.0,<2.5.0 --index-url https://download.pytorch.org/whl/cu118
+#
+# Apple Silicon (M1/M2/M3):
+# - PyTorch has native MPS (Metal Performance Shaders) support
+# - Install using: pip install torch torchvision
+#
+# Memory Requirements:
+# - Minimum: 16GB RAM for small models (GPT-2 sized)
+# - Recommended: 32GB+ RAM for Qwen2.5-7B with LoRA
+# - GPU: 24GB+ VRAM for full fine-tuning of 7B models
+# - GPU: 8GB+ VRAM sufficient for LoRA fine-tuning
+#
+# ==============================================================================
