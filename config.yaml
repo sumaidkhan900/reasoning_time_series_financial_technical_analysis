@@ -1,0 +1,192 @@
+﻿# ==============================================================================
+# Fused High-Fidelity Configuration for VTA Framework Reproduction
+# ==============================================================================
+# This file contains all hyperparameters and settings required to run the
+# end-to-end VTA pipeline.
+
+# --------------------------------------------------------------------------
+# SECTION A: RAW DATA INPUT SCHEMAS
+# --------------------------------------------------------------------------
+raw_data_schemas:
+  market_data_df:
+    description: "Primary DataFrame with OHLCV + Adj Close for all stocks."
+    target_spec:
+      target_field: "Adj Close"
+      horizon: 10  # T'
+
+# --------------------------------------------------------------------------
+# SECTION B: DATA PRE-PROCESSING & TASK SPECIFICATION PARAMETERS
+# --------------------------------------------------------------------------
+data_and_task_spec:
+  input_window_size: 10     # T
+  prediction_horizon: 10    # T'
+  stride: 1
+  
+  # Standard industry defaults for technical indicators.
+  annotation_indicator_hyperparams:
+    price_basis: "Close"
+    SMA_windows: [5, 10]
+    EMA_windows: [5, 10]
+    Momentum_lag: 4
+    RSI_period: 14
+    MACD: {fast: 12, slow: 26, signal: 9}
+    WilliamsR_lookback: 14
+    CCI_period: 14
+    ADX_period: 14
+    Bollinger: {window: 10, k: 2.0}
+    Stochastic: {K_lookback: 14, D_smoothing: 3}
+
+# --------------------------------------------------------------------------
+# SECTION C: VERBAL REASONING MODEL (π_θ) CONFIGURATION
+# --------------------------------------------------------------------------
+reasoning_model_config:
+  llm_settings:
+    base_model_identifier: "Qwen/Qwen2-7B-Instruct" # Updated to Qwen2
+    context_length_tokens: 4096
+
+  prompt_template:
+    template_string: |
+      You are a professional financial technical analyst.
+
+      Task:
+      - Analyze the historical time-series window and its technical annotations.
+      - Write your reasoning strictly within <think> and </think> tags.
+      - Output the next {prediction_horizon} adjusted close prices as a parseable list.
+
+      Inputs:
+      - Asset: {ticker}
+      - Window length T: {input_window_size}
+      - Prediction horizon T': {prediction_horizon}
+      - Window period: {window_start} to {window_end}
+      - OHLCV + Adjusted Close (oldest → newest):
+      {ohlcv_table}
+
+      - Summary statistics over the window:
+      {statistics_block}
+
+      - Technical indicators over the window:
+      {indicators_block}
+
+      Output format (mandatory):
+      <think>
+      {reasoning}
+      </think>
+      PREDICTION = [{p1}, {p2}, ..., {pN}]
+      Constraints:
+      - The PREDICTION list must contain exactly {prediction_horizon} floats.
+      - Do not print anything after the PREDICTION line.
+    stop_sequences: ["PREDICTION = [", "\n\n\n"]
+    format_enforcement:
+      require_think_tags: True
+      require_prediction_line: True
+      # Regex to find "PREDICTION = [...]" at the start of a line.
+      prediction_pattern: '^(PREDICTION = \\[.*\\])$'
+
+  sft_training_params:
+    optimizer: "AdamW"
+    learning_rate: 1.0e-4
+    batch_size: 4
+    epochs: 3
+
+  rl_training_params:
+    group_size_G: 8
+    ppo_clip_epsilon: 0.2
+    kl_weight_beta: 0.01
+    reward_scale_lambda: 1.0
+    format_reward_weight: 0.5
+    optimizer: "AdamW"
+    learning_rate: 1.0e-5
+    batch_size: 2 # Per GPU batch size for RL
+    updates_per_batch: 4
+    max_steps: 500
+    grad_clip_norm: 1.0
+    decoding_settings_for_sampling:
+      temperature: 0.7
+      top_p: 0.95
+      top_k: 50
+      max_new_tokens: 128
+      repetition_penalty: 1.1
+    rejection_sampling:
+      bucket_keys: ["ticker", "time_period"]
+      percentile_keep: 10
+      min_samples_per_bucket: 5
+
+  lora_config:
+    enabled: True
+    rank_r: 16
+    alpha: 32
+    dropout: 0.05
+    # Target modules for Qwen2 models
+    target_modules: ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+
+# --------------------------------------------------------------------------
+# SECTION D: LATENT FORECASTING MODEL (φ) CONFIGURATION
+# --------------------------------------------------------------------------
+forecasting_model_config:
+  prediction_horizon: 10 # Must match data_and_task_spec
+  architecture_params:
+    base_model_identifier: "gpt2"
+    d_model: 256
+    n_heads: 4
+    d_ff: 512
+    dropout: 0.1
+    n_layers_temporal: 4
+    n_layers_textual: 4
+    pca_n_prototypes_D: 128
+    per_head_dim_C: 64 # d_model / n_heads
+
+  losses:
+    feature_regularization:
+      sim: "L1"
+      # Exponential decay schedule for gamma weights γ^(N-n)
+      gamma_schedule: [0.8, 0.9, 0.95, 1.0] # Example for 4 layers
+    output_alignment:
+      sim: "L1"
+      weight: 1.0
+
+  training_params:
+    optimizer: "AdamW"
+    learning_rate: 1.0e-3
+    batch_size: 64
+    epochs: 50
+    grad_clip_norm: 1.0
+
+# --------------------------------------------------------------------------
+# SECTION E: JOINT CONDITIONAL TRAINING & INFERENCE (ψ) CONFIGURATION
+# --------------------------------------------------------------------------
+conditional_fusion_config:
+  attributes_c_definition:
+    components: ["min", "mean", "max"]
+  
+  psi_architecture:
+    per_attribute_linear_out_dim: 32
+    projection_mlp_width: 64
+    dropout: 0.1
+
+  training_params:
+    unconditional_probability: 0.3  # p_uncond
+    optimizer: "AdamW"
+    learning_rate: 5.0e-4
+    batch_size: 64
+    epochs: 50
+    freeze_backbone_phi: True
+
+  inference_params:
+    guidance_scale: 0.1  # s
+
+# --------------------------------------------------------------------------
+# SECTION H: EVALUATION & PORTFOLIO SETTINGS
+# --------------------------------------------------------------------------
+evaluation_and_portfolio_config:
+  portfolio:
+    risk_aversion_gamma: 2.0
+    covariance_estimator: "sample" # 'sample' or 'shrinkage'
+
+# --------------------------------------------------------------------------
+# SECTION I: REPRODUCIBILITY & LOGGING
+# --------------------------------------------------------------------------
+reproducibility:
+  seeds:
+    python: 42
+    numpy: 42
+    framework: 42
